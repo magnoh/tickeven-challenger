@@ -5,13 +5,12 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Habilitar CORS para permitir requisições do frontend React (Vercel + Localhost)
   app.enableCors({
-    origin: true,
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
 
-  // Habilitar validação global de DTOs com class-validator
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

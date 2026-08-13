@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../services/api';
 import type { Ticket } from '../types';
 import { QRCodeSVG } from 'qrcode.react';
-import { Ticket as TicketIcon, Calendar, MapPin, Share2, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { Ticket as TicketIcon, Calendar, MapPin, Share2 } from 'lucide-react';
 
 export const MyTicketsPage: React.FC = () => {
   const [tickets, setTickets] = useState<Ticket[]>([]);

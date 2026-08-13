@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../services/api';
 import type { Event, Reservation } from '../types';
 import { useAuth } from '../context/AuthContext';
-import { Calendar, MapPin, Ticket, AlertCircle, Minus, Plus, ShieldCheck } from 'lucide-react';
+import { Calendar, MapPin, Ticket, AlertCircle, Minus, Plus } from 'lucide-react';
 
 export const EventDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

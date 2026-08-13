@@ -61,7 +61,7 @@ export const GatePage: React.FC = () => {
           setIsScannerActive(false);
           scannerRef.current = null;
         },
-        (errorMessage) => {
+        () => {
           // erros continuos de frames sem qr code ignorados
         }
       );

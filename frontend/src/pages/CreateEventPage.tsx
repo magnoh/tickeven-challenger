@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../services/api';
-import { PlusCircle, Search, Sparkles, AlertCircle } from 'lucide-react';
+import { PlusCircle, Sparkles, AlertCircle } from 'lucide-react';
 
 export const CreateEventPage: React.FC = () => {
   const [title, setTitle] = useState('');

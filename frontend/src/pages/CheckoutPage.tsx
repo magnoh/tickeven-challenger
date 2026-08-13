@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../services/api';
 import type { Reservation } from '../types';
-import { ShieldCheck, CheckCircle2, XCircle, Clock, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock } from 'lucide-react';
 
 export const CheckoutPage: React.FC = () => {
   const { reservationId } = useParams<{ reservationId: string }>();
@@ -26,7 +26,7 @@ export const CheckoutPage: React.FC = () => {
     setError('');
 
     try {
-      const response = await apiFetch<any>('/payments', {
+      await apiFetch<any>('/payments', {
         method: 'POST',
         body: JSON.stringify({
           reservationId: reservation!.id,

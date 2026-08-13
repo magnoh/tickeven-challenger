@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../services/api';
 import type { Event } from '../types';
 import { Link } from 'react-router-dom';
-import { Calendar, Ticket, PlusCircle, CheckCircle, Ban, DollarSign } from 'lucide-react';
+import { Calendar, Ticket, PlusCircle, DollarSign } from 'lucide-react';
 
 export const OrganizerDashboard: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);

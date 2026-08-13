@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { apiFetch } from '../services/api';
 import { QRCodeSVG } from 'qrcode.react';
-import { Calendar, MapPin, Ticket as TicketIcon, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Calendar, MapPin, ShieldCheck } from 'lucide-react';
 
 export const PublicTicketPage: React.FC = () => {
   const { token } = useParams<{ token: string }>();

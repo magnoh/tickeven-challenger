@@ -5,13 +5,9 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const allowedOrigins = process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(',').map((url) => url.trim())
-    : ['http://localhost:5173', 'http://127.0.0.1:5173'];
-
-  // Habilitar CORS para permitir requisições do frontend React
+  // Habilitar CORS para permitir requisições do frontend React (Vercel + Localhost)
   app.enableCors({
-    origin: allowedOrigins,
+    origin: true,
     credentials: true,
   });
 

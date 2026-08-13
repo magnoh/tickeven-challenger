@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-surface: #12121a;
+  --bg-surface-hover: #1a1a26;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --text-primary: #f0eef6;
+  --text-secondary: #9a98a6;
+  --accent-purple: #c8b4ff;
+  --accent-purple-hover: #b299f7;
+  --accent-emerald: #10b981;
+  --accent-red: #ef4444;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Custom Utilities */
+.bg-surface {
+  background-color: var(--bg-surface);
+}
+
+.bg-surface-hover:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+.border-subtle {
+  border-color: var(--border-color);
+}
+
+.text-muted {
+  color: var(--text-secondary);
+}
+
+.btn-primary {
+  background-color: var(--accent-purple);
+  color: #0a0a0f;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-purple-hover);
+  transform: translateY(-1px);
+}

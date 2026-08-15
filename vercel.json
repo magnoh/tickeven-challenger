@@ -19,8 +19,16 @@
       "destination": "/backend/src/main.ts"
     },
     {
+      "source": "/(assets/.*)",
+      "destination": "/frontend/$1"
+    },
+    {
+      "source": "/(.*\\.svg)",
+      "destination": "/frontend/$1"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/frontend/dist/$1"
+      "destination": "/frontend/index.html"
     }
   ]
 }

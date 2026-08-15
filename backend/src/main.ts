@@ -8,6 +8,10 @@ let cachedServer: any;
 async function bootstrapServer() {
   const app = await NestFactory.create(AppModule);
 
+  if (process.env.VERCEL) {
+    app.setGlobalPrefix('api');
+  }
+
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

@@ -83,6 +83,7 @@ export class PaymentsService {
         eventId: string;
         userId: string;
         codeHash: string;
+        seat: string | null;
         status: TicketStatus;
       }> = [];
       const secret = process.env.TICKET_SECRET || 'tickeven-ticket-token-hmac-secret-998877';
@@ -98,6 +99,7 @@ export class PaymentsService {
           eventId: reservation.eventId,
           userId,
           codeHash,
+          seat: (reservation.seats && reservation.seats[i]) ? reservation.seats[i] : null,
           status: TicketStatus.ACTIVE,
         });
       }

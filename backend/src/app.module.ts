@@ -9,7 +9,7 @@ import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { TicketsModule } from './modules/tickets/tickets.module';
 import { GateModule } from './modules/gate/gate.module';
-import { TicketmasterModule } from './modules/external/ticketmaster/ticketmaster.module';
+import { TmdbModule } from './modules/external/tmdb/tmdb.module';
 
 @Module({
   imports: [
@@ -27,7 +27,7 @@ import { TicketmasterModule } from './modules/external/ticketmaster/ticketmaster
     PaymentsModule,
     TicketsModule,
     GateModule,
-    TicketmasterModule,
+    TmdbModule,
   ],
   providers: [
     {
@@ -37,4 +37,3 @@ import { TicketmasterModule } from './modules/external/ticketmaster/ticketmaster
   ],
 })
 export class AppModule {}
-

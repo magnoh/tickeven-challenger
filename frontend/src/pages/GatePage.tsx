@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { apiFetch } from '../services/api';
 import type { GateValidationResult } from '../types';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import { ShieldCheck, Camera, Keyboard, CheckCircle2, XCircle, AlertTriangle, RefreshCw } from 'lucide-react';
+import { ShieldCheck, Camera, Keyboard, CheckCircle2, XCircle, AlertTriangle, RefreshCw, Ticket, MapPin, Calendar, User } from 'lucide-react';
 
 export const GatePage: React.FC = () => {
   const [manualToken, setManualToken] = useState('');
@@ -18,13 +18,19 @@ export const GatePage: React.FC = () => {
     setError('');
     setValidationResult(null);
 
-    // Se o token for uma URL de compartilhamento, extrair o código hash final
+    // Normalização no cliente (mesmo padrão robusto do backend)
     let cleanToken = tokenToValidate.trim();
-    if (cleanToken.includes('/share/')) {
-      cleanToken = cleanToken.split('/share/').pop() || cleanToken;
-    } else if (cleanToken.includes('token=')) {
-      cleanToken = new URLSearchParams(cleanToken.split('?')[1]).get('token') || cleanToken;
+    if (cleanToken.includes('/tickets/share/')) {
+      cleanToken = cleanToken.split('/tickets/share/')[1] || cleanToken;
+    } else if (cleanToken.includes('/share/')) {
+      cleanToken = cleanToken.split('/share/')[1] || cleanToken;
     }
+
+    if (cleanToken.includes('token=')) {
+      cleanToken = cleanToken.split('token=')[1] || cleanToken;
+    }
+
+    cleanToken = cleanToken.split('?')[0].split('&')[0].split('#')[0].replace(/['"\s]/g, '').trim();
 
     try {
       const result = await apiFetch<GateValidationResult>('/gate/validate', {
@@ -62,7 +68,7 @@ export const GatePage: React.FC = () => {
           scannerRef.current = null;
         },
         () => {
-          // erros continuos de frames sem qr code ignorados
+          // frames intermediários sem QR ignorados
         }
       );
 
@@ -87,32 +93,35 @@ export const GatePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8 space-y-6">
+    <div className="max-w-xl mx-auto px-4 sm:px-6 py-10 space-y-6">
       <div className="text-center space-y-2">
-        <div className="inline-flex p-3 bg-emerald-500/10 rounded-xl mb-2 text-emerald-400 border border-emerald-500/20">
+        <div className="inline-flex p-3 bg-emerald-500/10 rounded-full mb-1 text-emerald-400 border border-emerald-500/30">
           <ShieldCheck className="w-8 h-8" />
         </div>
-        <h1 className="text-2xl font-extrabold text-white">Controle de Portaria</h1>
-        <p className="text-sm text-muted">Escaneie o QR Code pela câmera ou digite o código do ingresso</p>
+        <p className="eyebrow text-emerald-400">Scanner de Validação Instantânea</p>
+        <h1 className="font-anton text-3xl uppercase tracking-wide text-[#EDEAE0]">
+          Controle de Portaria
+        </h1>
+        <p className="text-xs text-[#9AA39B]">Escaneie o QR Code pela câmera ou digite o código/hash do ingresso</p>
       </div>
 
-      <div className="bg-surface border border-subtle p-6 rounded-2xl space-y-6">
+      <div className="bg-[#151E1A] border border-[#26332C] p-6 sm:p-8 rounded-[4px] space-y-6 shadow-2xl">
         {/* Scanner / Camera Toggle */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {!isScannerActive ? (
             <button
               onClick={startScanner}
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition-all"
+              className="w-full bg-emerald-600 hover:bg-emerald-500 text-[#0E1512] font-mono font-bold py-3.5 px-4 rounded-[2px] text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg"
             >
-              <Camera className="w-5 h-5" />
-              Abrir Câmera para Leitura de QR Code
+              <Camera className="w-4 h-4" />
+              Abrir Câmera para Leitura do QR Code
             </button>
           ) : (
             <div className="space-y-3">
-              <div id="reader" className="bg-black rounded-xl overflow-hidden border border-subtle" />
+              <div id="reader" className="bg-[#0E1512] rounded-[3px] overflow-hidden border border-[#26332C]" />
               <button
                 onClick={stopScanner}
-                className="w-full bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white font-bold py-2 rounded-xl text-xs transition-all"
+                className="w-full bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white font-mono font-bold py-2 rounded-[2px] text-xs transition-all uppercase cursor-pointer"
               >
                 Fechar Câmera
               </button>
@@ -120,10 +129,10 @@ export const GatePage: React.FC = () => {
           )}
         </div>
 
-        <div className="relative flex py-2 items-center">
-          <div className="flex-grow border-t border-subtle"></div>
-          <span className="flex-shrink mx-4 text-xs text-muted font-semibold">ou digitação manual</span>
-          <div className="flex-grow border-t border-subtle"></div>
+        <div className="relative flex py-1 items-center">
+          <div className="flex-grow border-t border-[#26332C]"></div>
+          <span className="flex-shrink mx-4 text-[10px] font-mono uppercase text-[#9AA39B] font-bold">ou digitação manual</span>
+          <div className="flex-grow border-t border-[#26332C]"></div>
         </div>
 
         {/* Manual Input Form */}
@@ -135,15 +144,17 @@ export const GatePage: React.FC = () => {
           className="space-y-3"
         >
           <div>
-            <label className="block text-xs font-semibold text-muted mb-1">Código do Ingresso / Hash</label>
+            <label className="block text-[11px] font-mono uppercase tracking-wider text-[#9AA39B] mb-1.5">
+              Código do Ingresso / URL de Compartilhamento
+            </label>
             <div className="relative">
-              <Keyboard className="w-4 h-4 text-muted absolute left-3 top-3.5" />
+              <Keyboard className="w-4 h-4 text-[#9AA39B] absolute left-3 top-3.5" />
               <input
                 type="text"
                 value={manualToken}
                 onChange={(e) => setManualToken(e.target.value)}
-                placeholder="Cole ou digite o código aqui..."
-                className="w-full bg-black/40 border border-subtle rounded-xl pl-9 pr-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400"
+                placeholder="Cole o código hash ou URL do ingresso..."
+                className="w-full bg-[#0E1512] border border-[#26332C] rounded-[2px] pl-9 pr-3 py-2.5 text-xs text-[#EDEAE0] font-mono placeholder-[#9AA39B]/40 focus:outline-none focus:border-[#E3B341]"
               />
             </div>
           </div>
@@ -151,40 +162,56 @@ export const GatePage: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading || !manualToken.trim()}
-            className="w-full btn-primary py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2"
+            className="w-full btn-gold py-3 text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 cursor-pointer"
           >
-            {isLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Validar Ingresso'}
+            {isLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Validar Ingresso na Portaria'}
           </button>
         </form>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-xs text-center font-medium">
+          <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-[2px] text-xs text-center font-mono">
             {error}
           </div>
         )}
 
         {/* Dynamic Validation Result Overlay */}
         {validationResult && (
-          <div className="pt-4 border-t border-subtle animate-in fade-in duration-300">
+          <div className="pt-4 border-t border-[#26332C] animate-in fade-in duration-300">
             {validationResult.result === 'VALID' && (
-              <div className="bg-emerald-500/15 border-2 border-emerald-500 p-6 rounded-2xl text-center space-y-3">
+              <div className="bg-emerald-500/15 border-2 border-emerald-500 p-6 rounded-[4px] text-center space-y-4 shadow-xl">
                 <CheckCircle2 className="w-14 h-14 text-emerald-400 mx-auto" />
-                <h3 className="text-xl font-black text-white">✓ INGRESSO VÁLIDO</h3>
-                <div className="text-xs text-muted space-y-1 bg-black/40 p-3 rounded-xl border border-emerald-500/30">
-                  <p className="text-white font-bold">{validationResult.event?.title}</p>
-                  <p>Titular: {validationResult.user?.name}</p>
-                  <p className="text-emerald-400 font-bold mt-1">Entrada Liberada!</p>
+                <div>
+                  <h3 className="font-anton text-2xl uppercase tracking-wide text-white">✓ INGRESSO VÁLIDO</h3>
+                  <p className="text-xs font-mono text-emerald-400 font-bold mt-0.5 uppercase tracking-wider">Entrada Liberada!</p>
+                </div>
+                <div className="text-xs text-[#9AA39B] space-y-2 bg-[#0E1512] p-4 rounded-[2px] border border-emerald-500/30 text-left">
+                  <div className="flex items-center gap-2 text-[#EDEAE0] font-bold">
+                    <Ticket className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span className="line-clamp-1">{validationResult.event?.title}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-mono">
+                    <User className="w-3.5 h-3.5 text-[#9AA39B]" />
+                    <span>Titular: <strong className="text-[#EDEAE0]">{validationResult.user?.name}</strong></span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-mono">
+                    <MapPin className="w-3.5 h-3.5 text-[#9AA39B]" />
+                    <span>Local: {validationResult.event?.location}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-mono">
+                    <Calendar className="w-3.5 h-3.5 text-[#9AA39B]" />
+                    <span>Data: {new Date(validationResult.event?.date).toLocaleString('pt-BR')}</span>
+                  </div>
                 </div>
               </div>
             )}
 
             {validationResult.result === 'ALREADY_USED' && (
-              <div className="bg-yellow-500/15 border-2 border-yellow-500 p-6 rounded-2xl text-center space-y-3">
-                <AlertTriangle className="w-14 h-14 text-yellow-400 mx-auto" />
-                <h3 className="text-xl font-black text-white">✕ INGRESSO JÁ UTILIZADO</h3>
-                <p className="text-xs text-muted">{validationResult.message}</p>
+              <div className="bg-[#E3B341]/15 border-2 border-[#E3B341] p-6 rounded-[4px] text-center space-y-3">
+                <AlertTriangle className="w-14 h-14 text-[#E3B341] mx-auto" />
+                <h3 className="font-anton text-2xl uppercase tracking-wide text-white">✕ INGRESSO JÁ UTILIZADO</h3>
+                <p className="text-xs text-[#9AA39B]">{validationResult.message}</p>
                 {validationResult.usedAt && (
-                  <p className="text-xs text-yellow-300 font-mono">
+                  <p className="text-xs text-[#E3B341] font-mono bg-[#0E1512] p-2 rounded-[2px] border border-[#E3B341]/30">
                     Utilizado em: {new Date(validationResult.usedAt).toLocaleString('pt-BR')}
                   </p>
                 )}
@@ -194,10 +221,10 @@ export const GatePage: React.FC = () => {
             {(validationResult.result === 'INVALID' ||
               validationResult.result === 'WRONG_EVENT' ||
               validationResult.result === 'CANCELLED') && (
-                <div className="bg-red-500/15 border-2 border-red-500 p-6 rounded-2xl text-center space-y-3">
+                <div className="bg-red-500/15 border-2 border-red-500 p-6 rounded-[4px] text-center space-y-3">
                   <XCircle className="w-14 h-14 text-red-400 mx-auto" />
-                  <h3 className="text-xl font-black text-white">✕ ENTRADA RECUSADA</h3>
-                  <p className="text-xs text-red-300 font-semibold">{validationResult.message}</p>
+                  <h3 className="font-anton text-2xl uppercase tracking-wide text-white">✕ ENTRADA RECUSADA</h3>
+                  <p className="text-xs text-red-300 font-mono font-semibold">{validationResult.message}</p>
                 </div>
               )}
           </div>
@@ -206,3 +233,4 @@ export const GatePage: React.FC = () => {
     </div>
   );
 };
+

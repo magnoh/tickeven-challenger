@@ -13,6 +13,11 @@ enum Role {
   GATE
 }
 
+enum EventType {
+  EVENT
+  MOVIE
+}
+
 enum EventStatus {
   DRAFT
   PUBLISHED
@@ -60,6 +65,7 @@ model Event {
   availableTickets Int
   price            Decimal     @db.Decimal(10, 2)
   status           EventStatus @default(DRAFT)
+  type             EventType   @default(EVENT)
   organizerId      String
   organizer        User        @relation(fields: [organizerId], references: [id])
   reservations     Reservation[]
@@ -76,6 +82,7 @@ model Reservation {
   userId    String
   eventId   String
   quantity  Int
+  seats     String[]          @default([])
   total     Decimal           @db.Decimal(10, 2)
   status    ReservationStatus @default(PENDING)
   expiresAt DateTime
@@ -96,6 +103,7 @@ model Ticket {
   eventId       String
   userId        String
   codeHash      String       @unique
+  seat          String?
   status        TicketStatus @default(ACTIVE)
   usedAt        DateTime?
   reservation   Reservation  @relation(fields: [reservationId], references: [id])

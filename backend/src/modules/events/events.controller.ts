@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -13,8 +13,8 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) { }
 
   @Get()
-  findAllPublished() {
-    return this.eventsService.findAllPublished();
+  findAllPublished(@Query('type') type?: 'EVENT' | 'MOVIE') {
+    return this.eventsService.findAllPublished(type);
   }
 
   @Get('organizer/my-events')

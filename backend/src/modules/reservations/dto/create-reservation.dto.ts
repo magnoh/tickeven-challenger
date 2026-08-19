@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsInt, Min, Max } from 'class-validator';
+import { IsNotEmpty, IsString, IsInt, Min, Max, IsOptional } from 'class-validator';
 
 export class CreateReservationDto {
   @IsString()
@@ -9,5 +9,9 @@ export class CreateReservationDto {
   @Min(1, { message: 'A quantidade mínima para reserva é 1 ingresso' })
   @Max(10, { message: 'A quantidade máxima para reserva é 10 ingressos por vez' })
   quantity: number;
+
+  @IsString({ each: true })
+  @IsOptional()
+  seats?: string[];
 }
 

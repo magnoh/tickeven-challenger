@@ -58,8 +58,17 @@ if (!process.env.VERCEL) {
 
 // Handler serverless exportado para a Vercel
 export default async function (req: any, res: any) {
-  if (!cachedServer) {
-    cachedServer = await bootstrapServer();
+  try {
+    if (!cachedServer) {
+      cachedServer = await bootstrapServer();
+    }
+    return cachedServer(req, res);
+  } catch (error: any) {
+    console.error('🔥 ERRO CRÍTICO NA INICIALIZAÇÃO DO NESTJS:', error);
+    return res.status(500).json({ 
+      statusCode: 500, 
+      message: 'Erro interno ao iniciar a aplicação (Vercel Serverless)',
+      details: error?.message || String(error)
+    });
   }
-  return cachedServer(req, res);
 }

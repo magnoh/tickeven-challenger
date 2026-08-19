@@ -15,14 +15,36 @@ export class GateService {
   constructor(private prisma: PrismaService) {}
 
   async validateTicket(validateTicketDto: ValidateTicketDto): Promise<GateValidationResponse> {
-    const { token, eventId } = validateTicketDto;
+    let { token, eventId } = validateTicketDto;
+
+    if (!token) {
+      return {
+        result: 'INVALID',
+        message: 'Token de ingresso não fornecido',
+      };
+    }
+
+    // Normalização completa de token recebido (seja URL completa, QR code string, path ou hash direto)
+    let cleanToken = token.trim();
+    if (cleanToken.includes('/tickets/share/')) {
+      cleanToken = cleanToken.split('/tickets/share/')[1] || cleanToken;
+    } else if (cleanToken.includes('/share/')) {
+      cleanToken = cleanToken.split('/share/')[1] || cleanToken;
+    }
+
+    if (cleanToken.includes('token=')) {
+      cleanToken = cleanToken.split('token=')[1] || cleanToken;
+    }
+
+    // Limpar parâmetros de URL residuais, fragmentos de hash e aspas
+    cleanToken = cleanToken.split('?')[0].split('&')[0].split('#')[0].replace(/['"\s]/g, '').trim();
 
     // Buscar ticket pelo codeHash (ou id como fallback amigável)
     const ticket = await this.prisma.ticket.findFirst({
       where: {
         OR: [
-          { codeHash: token },
-          { id: token }
+          { codeHash: cleanToken },
+          { id: cleanToken }
         ]
       },
       include: {

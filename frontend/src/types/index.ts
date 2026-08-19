@@ -25,7 +25,9 @@ export interface Event {
   availableTickets: number;
   price: number;
   status: EventStatus;
+  type: 'EVENT' | 'MOVIE';
   organizerId: string;
+  reservations?: Reservation[];
 }
 
 export interface Reservation {
@@ -33,6 +35,7 @@ export interface Reservation {
   userId: string;
   eventId: string;
   quantity: number;
+  seats: string[];
   total: number;
   status: ReservationStatus;
   expiresAt: string;
@@ -46,6 +49,7 @@ export interface Ticket {
   eventId: string;
   userId: string;
   codeHash: string;
+  seat?: string;
   status: TicketStatus;
   usedAt?: string;
   event: Event;

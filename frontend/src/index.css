@@ -3,52 +3,226 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-surface: #12121a;
-  --bg-surface-hover: #1a1a26;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --text-primary: #f0eef6;
-  --text-secondary: #9a98a6;
-  --accent-purple: #c8b4ff;
-  --accent-purple-hover: #b299f7;
-  --accent-emerald: #10b981;
-  --accent-red: #ef4444;
+  --ink: #0E1512;
+  --ink-soft: #151E1A;
+  --ink-line: #26332C;
+  --paper: #F6F1E4;
+  --paper-dim: #E7E0CC;
+  --gold: #E3B341;
+  --gold-dim: #B98F35;
+  --gold-hover: #EFC259;
+  --moss: #4B5A52;
+  --text: #EDEAE0;
+  --text-dim: #9AA39B;
+  --radius-card: 4px;
+
+  /* Compatibilidade */
+  --bg-primary: var(--ink);
+  --bg-surface: var(--ink-soft);
+  --bg-surface-hover: #1B2621;
+  --border-color: var(--ink-line);
+  --text-primary: var(--text);
+  --text-secondary: var(--text-dim);
+  --accent-gold: var(--gold);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: var(--ink);
+  color: var(--text);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* Custom Utilities */
-.bg-surface {
-  background-color: var(--bg-surface);
+::selection {
+  background: var(--gold);
+  color: var(--ink);
 }
 
-.bg-surface-hover:hover {
-  background-color: var(--bg-surface-hover);
+.display {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-weight: 400;
 }
 
-.border-subtle {
-  border-color: var(--border-color);
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
 }
 
-.text-muted {
-  color: var(--text-secondary);
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Signature Logo */
+.logo-mark {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.logo-mark::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+/* Botões */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gold);
+  color: var(--ink);
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 2px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-gold:hover {
+  background-color: var(--gold-hover);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ink-line);
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-ghost:hover {
+  border-color: var(--moss);
+  color: var(--gold);
 }
 
 .btn-primary {
-  background-color: var(--accent-purple);
-  color: #0a0a0f;
-  font-weight: 600;
+  background-color: var(--gold);
+  color: var(--ink);
+  font-weight: 700;
   transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-purple-hover);
+  background-color: var(--gold-hover);
   transform: translateY(-1px);
 }
+
+/* Ticket Card */
+.ticket-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 88px;
+  background: var(--ink-soft);
+  border: 1px solid var(--ink-line);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ticket-card:hover {
+  transform: translateY(-4px) rotate(-0.3deg);
+  border-color: var(--moss);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5);
+}
+
+.ticket-stub {
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 6px;
+  border-left: 2px dashed rgba(14, 21, 18, 0.25);
+}
+
+.ticket-stub::before,
+.ticket-stub::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 1px solid var(--ink-line);
+}
+
+.ticket-stub::before {
+  top: -8px;
+}
+
+.ticket-stub::after {
+  bottom: -8px;
+}
+
+.stub-price {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  font-size: 15px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 0.02em;
+}
+
+.stub-from {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--moss);
+  font-weight: 700;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* Marquee track */
+.marquee-track {
+  display: inline-flex;
+  gap: 48px;
+  animation: marquee-scroll 34s linear infinite;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+

@@ -15,15 +15,17 @@ export class EventsService {
         date: new Date(createEventDto.date),
         availableTickets: createEventDto.capacity,
         status: EventStatus.DRAFT,
+        type: createEventDto.type || 'EVENT',
         organizerId,
       },
     });
   }
 
-  async findAllPublished() {
+  async findAllPublished(type?: 'EVENT' | 'MOVIE') {
     return this.prisma.event.findMany({
       where: {
         status: EventStatus.PUBLISHED,
+        ...(type ? { type } : {}),
       },
       orderBy: {
         date: 'asc',
@@ -37,6 +39,10 @@ export class EventsService {
       include: {
         organizer: {
           select: { id: true, name: true, email: true },
+        },
+        reservations: {
+          where: { status: { not: 'EXPIRED' } },
+          select: { seats: true },
         },
       },
     });

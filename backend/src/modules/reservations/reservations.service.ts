@@ -11,7 +11,7 @@ export class ReservationsService {
   constructor(private prisma: PrismaService) {}
 
   async create(createReservationDto: CreateReservationDto, userId: string) {
-    const { eventId, quantity } = createReservationDto;
+    const { eventId, quantity, seats } = createReservationDto;
 
     // Buscar evento
     const event = await this.prisma.event.findUnique({
@@ -31,6 +31,26 @@ export class ReservationsService {
 
     // TRANSAÇÃO ATÔMICA COM PROTEÇÃO CONTRA OVERSELLING
     return this.prisma.$transaction(async (tx) => {
+      // Validação de Assentos Se existirem
+      if (seats && seats.length > 0) {
+        if (seats.length !== quantity) {
+          throw new ConflictException('A quantidade de ingressos deve corresponder ao número de assentos selecionados');
+        }
+        
+        // Verificar se algum dos assentos já está reservado por outra pessoa
+        const conflitos = await tx.reservation.findMany({
+          where: {
+            eventId,
+            status: { not: ReservationStatus.EXPIRED },
+            seats: { hasSome: seats }
+          }
+        });
+
+        if (conflitos.length > 0) {
+          throw new ConflictException('Um ou mais assentos selecionados já estão reservados');
+        }
+      }
+
       // Tentar decrementar estoque atomicamente onde disponível >= quantidade
       const updatedEvent = await tx.event.updateMany({
         where: {
@@ -57,6 +77,7 @@ export class ReservationsService {
           userId,
           eventId,
           quantity,
+          seats: seats || [],
           total,
           status: ReservationStatus.PENDING,
           expiresAt,

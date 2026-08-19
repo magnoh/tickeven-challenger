@@ -62,7 +62,8 @@ export class TicketsService {
       eventStatus: ticket.event.status,
       ticketStatus: ticket.status,
       codeHash: ticket.codeHash,
-      type: 'Pista Geral',
+      type: ticket.seat ? `Assento ${ticket.seat}` : 'Pista Geral',
+      seat: ticket.seat,
     };
   }
 }

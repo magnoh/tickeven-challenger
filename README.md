@@ -11,7 +11,8 @@ Plataforma completa de eventos e ingressos construída para o **Desafio Elite De
 - **Expiração de Reserva**: Cron Job automático (`@nestjs/schedule`) expira reservas pendentes após 10 minutos e devolve o estoque.
 - **Ingressos Criptográficos**: Tokens seguros via HMAC-SHA256 e visualização de QR Code reativo no cliente.
 - **Portaria com Leitura de QR Code**: Validação na câmera do dispositivo ou digitação manual com respostas visuais instantâneas (`VALID`, `ALREADY_USED`, `INVALID`, `CANCELLED`).
-- **Catálogo Externo Ticketmaster**: Importação de dados simulada para criação rápida de eventos pelo organizador.
+- **Catálogo Externo The Movie DB (TMDB)**: Importação de dados de filmes e posters em alta resolução para criação rápida de eventos e sessões pelo organizador.
+- **Modelagem de Arenas e Salas**: 3 layouts interativos (Anfiteatro Orion com setores em arco, Arena/Estádio esportivo e Teatro clássico com plateia/frisas/balcão).
 
 ---
 
@@ -85,7 +86,7 @@ Todas as contas de teste utilizam a senha padrão: **`123456`**
 
 | Perfil | E-mail | Funcionalidades |
 | text | text | text |
-| **ORGANIZER** | `organizador@demo.com` | Criar eventos, publicar rascunhos, importar Ticketmaster, acompanhar vendas |
+| **ORGANIZER** | `organizador@demo.com` | Criar eventos, publicar rascunhos, importar dados TMDB, escolher layouts de arena, acompanhar vendas |
 | **CUSTOMER 1** | `cliente1@demo.com` | Navegar, reservar ingressos, simular pagamentos |
 | **CUSTOMER 2** | `cliente2@demo.com` | Possui ingresso ativo (`demo-ticket-active-hash-12345`) e já utilizado para testes |
 | **GATE** | `portaria@demo.com` | Acessar scanner da câmera e validar ingressos na portaria |

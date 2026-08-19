@@ -19,52 +19,62 @@ export const PublicTicketPage: React.FC = () => {
   }, [token]);
 
   if (isLoading) {
-    return <div className="max-w-md mx-auto px-4 py-16 text-center text-muted">Validando ingresso público...</div>;
+    return <div className="max-w-md mx-auto px-4 py-20 text-center mono text-sm text-[#9AA39B]">Validando ingresso público...</div>;
   }
 
   if (error || !ticketData) {
     return (
-      <div className="max-w-md mx-auto px-4 py-16 text-center space-y-3">
-        <div className="text-red-400 font-bold text-lg">Ingresso Inválido</div>
-        <p className="text-xs text-muted">{error}</p>
+      <div className="max-w-md mx-auto px-4 py-20 text-center space-y-3">
+        <div className="text-red-400 font-anton text-2xl uppercase">Ingresso Inválido</div>
+        <p className="text-xs font-mono text-[#9AA39B]">{error}</p>
       </div>
     );
   }
 
   return (
     <div className="max-w-md mx-auto px-4 py-12">
-      <div className="bg-surface border border-subtle rounded-3xl overflow-hidden shadow-2xl space-y-6">
-        <div className="bg-gradient-to-r from-purple-900/40 to-surface p-6 border-b border-subtle text-center">
-          <ShieldCheck className="w-10 h-10 text-[#C8B4FF] mx-auto mb-2" />
-          <h1 className="text-xl font-extrabold text-white">Ingresso Oficial TickEven</h1>
-          <p className="text-xs text-muted">Página pública de validação e visualização</p>
+      <div className="bg-[#151E1A] border border-[#26332C] rounded-[4px] overflow-hidden shadow-2xl space-y-6">
+        <div className="bg-[#0E1512] p-6 border-b border-[#26332C] text-center space-y-2">
+          <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#E3B341]/10 border border-[#E3B341]/30 text-[#E3B341]">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
+          <p className="eyebrow">Autenticidade Garantida</p>
+          <h1 className="font-anton text-2xl uppercase tracking-wide text-[#EDEAE0]">
+            Ingresso Oficial TickEven
+          </h1>
+          <p className="text-xs text-[#9AA39B]">Apresente este voucher na portaria para leitura ótica instantânea</p>
         </div>
 
         <div className="p-6 space-y-6">
           <div className="text-center space-y-2">
-            <h2 className="text-2xl font-black text-white">{ticketData.eventTitle}</h2>
-            <div className="flex items-center justify-center gap-2 text-xs text-muted">
-              <Calendar className="w-3.5 h-3.5 text-[#C8B4FF]" />
+            <h2 className="font-anton text-2xl uppercase tracking-wide text-[#EDEAE0]">{ticketData.eventTitle}</h2>
+            <div className="flex items-center justify-center gap-2 text-xs font-mono text-[#9AA39B]">
+              <Calendar className="w-3.5 h-3.5 text-[#E3B341]" />
               <span>{new Date(ticketData.eventDate).toLocaleString('pt-BR')}</span>
             </div>
-            <div className="flex items-center justify-center gap-2 text-xs text-muted">
-              <MapPin className="w-3.5 h-3.5 text-[#C8B4FF]" />
+            <div className="flex items-center justify-center gap-2 text-xs text-[#9AA39B]">
+              <MapPin className="w-3.5 h-3.5 text-[#9AA39B]" />
               <span>{ticketData.eventLocation}</span>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl flex items-center justify-center border border-subtle shadow-lg">
-            <QRCodeSVG value={window.location.href} size={200} level="H" />
+          <div className="bg-[#F6F1E4] p-6 rounded-[4px] flex flex-col items-center justify-center border-2 border-dashed border-[#26332C]/30 shadow-inner">
+            <QRCodeSVG value={window.location.href} size={190} level="H" />
+            <span className="font-mono text-[10px] font-bold text-[#0E1512] mt-3 uppercase tracking-wider">
+              Token HMAC Criptografado
+            </span>
           </div>
 
-          <div className="bg-black/40 border border-subtle p-4 rounded-xl space-y-2 text-xs">
+          <div className="bg-[#0E1512] border border-[#26332C] p-4 rounded-[2px] space-y-2.5 text-xs font-mono">
             <div className="flex justify-between">
-              <span className="text-muted">Tipo de Ingresso</span>
-              <span className="text-white font-semibold">{ticketData.type}</span>
+              <span className="text-[#9AA39B]">Assento / Categoria:</span>
+              <span className="text-[#EDEAE0] font-bold">{ticketData.type}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted">Status do Ingresso</span>
-              <span className="text-emerald-400 font-bold">{ticketData.ticketStatus}</span>
+              <span className="text-[#9AA39B]">Status do Ingresso:</span>
+              <span className={`font-bold ${ticketData.ticketStatus === 'ACTIVE' ? 'text-emerald-400' : 'text-zinc-400'}`}>
+                {ticketData.ticketStatus === 'ACTIVE' ? '● VÁLIDO' : '✕ UTILIZADO'}
+              </span>
             </div>
           </div>
         </div>
@@ -72,3 +82,4 @@ export const PublicTicketPage: React.FC = () => {
     </div>
   );
 };
+

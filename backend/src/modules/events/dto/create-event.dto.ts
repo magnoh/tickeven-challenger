@@ -32,4 +32,8 @@ export class CreateEventDto {
   @IsString()
   @IsOptional()
   externalId?: string;
+
+  @IsString()
+  @IsOptional()
+  type?: 'EVENT' | 'MOVIE';
 }
